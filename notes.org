@@ -1,0 +1,60 @@
+* Commands I Ran
+<2022-09-15 Thu 21:28>: Here are the commands I was able to use:
+#+begin_src bash
+rackup config.ru
+#+end_src
+
+I then opened up a web browser and visited the following URL which then returned an HTML response:
+- http://localhost:9292
+
+I then modified the contents of the 'config/ru' file to include the following:
+#+begin_src ruby
+require "rack"
+require "pry"
+
+class App
+    def call(env)
+        binding.pry()
+        [200, { "Content-Type" => "text/html" }, ["<h2>Hello <em>Hello</em>!</h2>"]]
+    end
+end
+
+run App.new()
+#+end_src
+
+I then visited the same 'http://localhost:9292' URL and used the following within the 'pry' based breakpoint:
+#+begin_src ruby
+samuelbanya@Samuels-MBP ~/hub/Development/code/phase-3/phase-3-web-server-fundamentals-with -rack $ rackup config.ru [2022-09-15 21:36:07] INFO  WEBrick 1.7.0 [2022-09-15 21:36:07] INFO  ruby 2.7.4 (2021-07-07) [x86_64-darwin21] [2022-09-15 21:36:07] INFO  WEBrick::HTTPServer#start: pid=12837 port=9292 From: /Users/samuelbanya/hub/Development/code/phase-3/phase-3-web-server-fundamentals-with-rack/config.ru:6 App#call: 5: def call(env) => 6:     binding.pry() 7:     [200, { "Content-Type" => "text/html" }, ["<h2>Hello <em>Hello</em>!</h2>"]] 8: end [1] pry(#<App>)> env["REQUEST_METHOD"] => "GET" [2] pry(#<App>)> env["PATH_INFO"] => "/"
+#+end_src
+
+I then modified the contents of the 'config.ru' file to be the following:
+#+begin_src ruby
+#+begin_src ruby
+require "rack"
+require "pry"
+
+class App
+    def call(env)
+        # binding.pry()
+        if path == "/"
+            [200, { "Content-Type" => "text/html" }, ["<h2>Hello <em>Hello</em>!</h2>"]]
+        end
+        elsif path == "/potato"
+            [200, { "Content-Type" => "text/html" }, ["<h2>Hello <em>Hello</em>!</h2>"]]
+        end
+        else
+            [404, { "Content-Type" => "text/html" }, ["Page not found"]]
+        end
+    end
+end
+
+run App.new()
+#+end_src
+
+I then re-ran the server, and loaded the following URLs into a browser:
+- http://localhost:9292/
+- NOTE: This outputted the normal expected response
+- http://localhost:9292/potato
+- NOTE: This returned the 'Boil 'em, mash 'em, stick 'em in a stew' string
+- http://localhost:9292/home
+- NOTE: This returned the string, 'Boil 'em, mash 'em, stick 'em in a stew'
